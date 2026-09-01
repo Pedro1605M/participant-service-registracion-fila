@@ -10,6 +10,7 @@ import br.com.rezultz.participantserviceregistracionfila.repository.ParticipantA
 import br.com.rezultz.participantserviceregistracionfila.repository.ParticipantAssociateRepository;
 import br.com.rezultz.participantserviceregistracionfila.repository.ParticipantContactRepository;
 import br.com.rezultz.participantserviceregistracionfila.repository.ParticipantRepository;
+import br.com.rezultz.participantserviceregistracionfila.validator.ParticipantValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,13 @@ public class ParticipantService {
     private final ParticipantAddressRepository participantAddressRepository;
     private final ParticipantAssociateRepository participantAssociateRepository;
     private final ParticipantContactRepository participantContactRepository;
+    private final ParticipantValidator participantValidator;
 
     @Transactional
     public void createParticipant(ParticipantProducerResponse response){
         ParticipantProducerRequest request = response.request();
 
+        participantValidator.validateDocumentDoesNotExist(request.document());
         Participant participant = saveParticipant(request);
         Long participantId = participant.getId();
 
